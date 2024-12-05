@@ -14,19 +14,7 @@ const path = require('path');
 // Serve static files from the frontend build directory
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-// API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/watchlist', authenticate, watchlistRoutes); // Ensure authentication middleware is used
-app.use('/api/movies', movieRoutes);
-app.use('/api/comments', commentsRoutes);
-app.use('/api/users', userRoutes); // Ensure userRoutes is used
-app.use('/api/recommendations', authenticate, recommendationRoutes); // Add this line
-
-// Root route
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-});
-
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -51,7 +39,7 @@ app.use('/api/recommendations', authenticate, recommendationRoutes); // Add this
 
 // Root route
 app.get('/', (req, res) => {
-    res.send('API is running...');
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });
 
 // Start the server
