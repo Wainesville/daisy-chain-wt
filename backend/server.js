@@ -3,6 +3,7 @@ const cors = require('cors');
 const multer = require('multer'); // Middleware for handling file uploads
 const authenticate = require('./middleware/authenticate'); // Adjust path if needed
 require('dotenv').config();
+const pool = require('./db'); // Import the database pool
 
 console.log('Type of authenticate:', typeof authenticate); // Add this line
 
@@ -45,4 +46,13 @@ app.get('/', (req, res) => {
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+});
+
+// Test database connection
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+        console.error('Error executing query', err.stack);
+    } else {
+        console.log('Database connected:', res.rows[0]);
+    }
 });
