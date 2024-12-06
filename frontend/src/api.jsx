@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_KEY = '8feb4db25b7185d740785fc6b6f0e850';
 const BASE_URL = 'https://api.themoviedb.org/3';
-const API_SERVER_URL = 'http://localhost:5000/api'; // Your backend URL
+const API_URL = 'https://your-app.herokuapp.com/api';
 
 // Helper function to deduplicate results based on ID
 const deduplicateResults = (results) => {
@@ -66,7 +66,7 @@ export const addToWatchlist = async (movieId, title, poster) => {
   }
 
   try {
-    await axios.post(`${API_SERVER_URL}/watchlist/add`, {
+    await axios.post(`${API_URL}/watchlist/add`, {
       movieId,
       title,
       poster,
@@ -99,7 +99,7 @@ export const fetchWatchlist = async () => {
     return;
   }
   try {
-    const response = await axios.get(`${API_SERVER_URL}/watchlist`, {
+    const response = await axios.get(`${API_URL}/watchlist`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -128,7 +128,7 @@ export const removeFromWatchlist = async (movieId) => {
     return false;
   }
   try {
-    await axios.delete(`${API_SERVER_URL}/watchlist/remove/${movieId}`, {
+    await axios.delete(`${API_URL}/watchlist/remove/${movieId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -212,7 +212,7 @@ export const searchMovies = async (query) => {
 // Login User
 export const loginUser = async (credentials) => {
   try {
-    const response = await axios.post(`${API_SERVER_URL}/auth/login`, credentials);
+    const response = await axios.post(`${API_URL}/auth/login`, credentials);
     console.log('Login response:', response.data); // Add this line
     localStorage.setItem('token', response.data.token); // Store token in local storage
     return response.data; // Ensure that the response data includes the user object
@@ -225,7 +225,7 @@ export const loginUser = async (credentials) => {
 // Register User
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_SERVER_URL}/auth/register`, userData);
+    const response = await axios.post(`${API_URL}/auth/register`, userData);
     return response.data;
   } catch (error) {
     console.error('Error registering:', error.response ? error.response.data : error.message);
@@ -242,7 +242,7 @@ export const fetchUserData = async (username) => {
     return;
   }
   try {
-    const response = await axios.get(`${API_SERVER_URL}/users/${username}`, {
+    const response = await axios.get(`${API_URL}/users/${username}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -265,7 +265,7 @@ export const fetchUserData = async (username) => {
 // Fetch Watchlist by User ID
 export const fetchWatchlistByUserId = async (userId) => {
   try {
-    const response = await axios.get(`${API_SERVER_URL}/watchlist/${userId}`);
+    const response = await axios.get(`${API_URL}/watchlist/${userId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching watchlist by user ID:', error.response ? error.response.data : error.message);
@@ -282,7 +282,7 @@ export const fetchRecommendations = async () => {
     return;
   }
   try {
-    const response = await axios.get(`${API_SERVER_URL}/recommendations`, {
+    const response = await axios.get(`${API_URL}/recommendations`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
