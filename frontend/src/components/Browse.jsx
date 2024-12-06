@@ -4,7 +4,7 @@ import { API_URL } from './config'; // Import the API_URL
 import ModalWrapper from './ModalWrapper'; // Import the ModalWrapper component
 import MovieInfo from './MovieInfo'; // Import the MovieInfo component
 import Badge from 'react-bootstrap/Badge'; // Import Badge from react-bootstrap
-import './UserPage.css'; // Reuse the UserPage.css styles
+import './styles.css'; // Use the global styles
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = '8feb4db25b7185d740785fc6b6f0e850';
