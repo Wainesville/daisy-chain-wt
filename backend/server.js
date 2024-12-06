@@ -40,7 +40,7 @@ app.use('/api/recommendations', authenticate, recommendationRoutes); // Add this
 
 // Root route
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });
 
 // Start the server
