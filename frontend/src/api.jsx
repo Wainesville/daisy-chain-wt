@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_KEY = '8feb4db25b7185d740785fc6b6f0e850';
 const BASE_URL = 'https://api.themoviedb.org/3';
-const API_URL = 'https://your-app.herokuapp.com/api';
+const API_URL = 'https://daisy-chain-6d6d9cb21bb4.herokuapp.com/api';
 
 // Helper function to deduplicate results based on ID
 const deduplicateResults = (results) => {
