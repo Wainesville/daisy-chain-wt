@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from './config'; // Import the API_URL
-import './Watchlist.css'; // Ensure the correct CSS file is imported
+import './styles.css'; // Use the global styles
 
 function Watchlist() {
   const [watchlist, setWatchlist] = useState([]);

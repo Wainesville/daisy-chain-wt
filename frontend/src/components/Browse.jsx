@@ -1,118 +1,73 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from './config'; // Import the API_URL
 import ModalWrapper from './ModalWrapper'; // Import the ModalWrapper component
 import MovieInfo from './MovieInfo'; // Import the MovieInfo component
 import Badge from 'react-bootstrap/Badge'; // Import Badge from react-bootstrap
-import './UserPage.css'; // Reuse the UserPage.css styles
+import './styles.css'; // Use the global styles
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = '8feb4db25b7185d740785fc6b6f0e850';
 
-const ViewUserPage = () => {
-  const { username } = useParams();
-  const [user, setUser] = useState(null);
-  const [watchlist, setWatchlist] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
-  const [currentlyWatching, setCurrentlyWatching] = useState(null);
-  const [topMovies, setTopMovies] = useState([]);
-  const [upNext, setUpNext] = useState(null);
+const Browse = () => {
+  const [genres, setGenres] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState('');
+  const [genreMovies, setGenreMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
 
-  const defaultProfilePicture = 'https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png'; // Default image URL
-
   useEffect(() => {
-    console.log('ViewUserPage received username:', username);
-
-    const fetchUserData = async () => {
+    const fetchGenres = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.error('No token found in localStorage');
-          window.location.href = '/login'; // Redirect to login page
-          return;
-        }
-        const userResponse = await axios.get(`${API_URL}/users/${username}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
+          params: {
+            api_key: API_KEY,
           },
         });
-        console.log('Fetched user data:', userResponse.data);
-        setUser(userResponse.data);
-
-        const watchlistResponse = await axios.get(`${API_URL}/watchlist/${userResponse.data.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setWatchlist(watchlistResponse.data);
-
-        // Fetch recommendations details
-        if (userResponse.data.recommendations && userResponse.data.recommendations.length > 0) {
-          const recommendationsDetails = await Promise.all(
-            userResponse.data.recommendations.map(async (movieId) => {
-              if (!movieId) return null; // Skip null or undefined movie IDs
-              try {
-                const movieResponse = await axios.get(`${BASE_URL}/movie/${movieId}`, {
-                  params: {
-                    api_key: API_KEY,
-                  },
-                });
-                console.log('Fetched movie data:', movieResponse.data);
-                return {
-                  ...movieResponse.data,
-                  thumbnail: `https://image.tmdb.org/t/p/w500/${movieResponse.data.poster_path}`,
-                };
-              } catch (error) {
-                console.error(`Failed to fetch movie with ID ${movieId}:`, error);
-                return null;
-              }
-            })
-          );
-          setRecommendations(recommendationsDetails.filter(movie => movie !== null));
-        }
-
-        // Set currently watching and up next
-        if (watchlistResponse.data.length > 0) {
-          setCurrentlyWatching(watchlistResponse.data[0]);
-          setUpNext(watchlistResponse.data[1] || null);
-        }
-
-        // Fetch top 5 movies details
-        if (userResponse.data.top_movies && userResponse.data.top_movies.length > 0) {
-          const topMoviesDetails = await Promise.all(
-            userResponse.data.top_movies.map(async (movieId) => {
-              if (!movieId) return null; // Skip null or undefined movie IDs
-              try {
-                const movieResponse = await axios.get(`${BASE_URL}/movie/${movieId}`, {
-                  params: {
-                    api_key: API_KEY,
-                  },
-                });
-                console.log('Fetched movie data:', movieResponse.data);
-                return {
-                  ...movieResponse.data,
-                  thumbnail: `https://image.tmdb.org/t/p/w500/${movieResponse.data.poster_path}`,
-                };
-              } catch (error) {
-                console.error(`Failed to fetch movie with ID ${movieId}:`, error);
-                return null;
-              }
-            })
-          );
-          setTopMovies(topMoviesDetails.filter(movie => movie !== null));
-        }
+        setGenres(response.data.genres);
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
-        setError('User not found');
+        console.error('Failed to fetch genres:', error);
+        setError('Failed to fetch genres');
       }
     };
 
-    fetchUserData();
-  }, [username]);
+    fetchGenres();
+  }, []);
+
+  const handleGenreClick = async (genreId) => {
+    setSelectedGenre(genreId);
+    try {
+      const response = await axios.get(`${BASE_URL}/discover/movie`, {
+        params: {
+          api_key: API_KEY,
+          with_genres: genreId,
+        },
+      });
+      setGenreMovies(response.data.results);
+    } catch (error) {
+      console.error('Failed to fetch movies by genre:', error);
+      setError('Failed to fetch movies by genre');
+    }
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get(`${BASE_URL}/search/movie`, {
+        params: {
+          api_key: API_KEY,
+          query: searchTerm,
+        },
+      });
+      setSearchResults(response.data.results);
+    } catch (error) {
+      console.error('Failed to search movies:', error);
+      setError('Failed to search movies');
+    }
+  };
 
   const openModal = (movieId) => {
     setSelectedMovieId(movieId);
@@ -125,73 +80,52 @@ const ViewUserPage = () => {
   };
 
   if (error) return <div>{error}</div>;
-  if (!user) return <div>Loading...</div>;
 
   return (
-    <div className="user-page">
-      <div className="user-header">
-        <img src={user.profile_picture || defaultProfilePicture} alt={`${user.username}'s profile`} className="user-image" />
-        <div className="user-info">
-          <h1>{user.username}</h1>
-          <p className="user-bio">{user.bio}</p>
-          <p className="user-genres"><strong>Favorite Genres:</strong> {user.favorite_genres ? user.favorite_genres.join(', ') : 'No favorite genres listed'}</p>
-        </div>
+    <div className="browse-page">
+      <div className="genres">
+        <h2>Genres</h2>
+        <ul>
+          {genres && genres.length > 0 ? (
+            genres.map((genre) => (
+              <li key={genre.id} onClick={() => handleGenreClick(genre.id)}>
+                {genre.name}
+              </li>
+            ))
+          ) : (
+            <li>No genres available.</li>
+          )}
+        </ul>
       </div>
-      <div className="user-content">
-        <div className="top-movies">
-          <h2>Top 5 Movies</h2>
-          <div className="movie-row">
-            {topMovies.length > 0 ? (
-              topMovies.map((movie, index) => (
-                <div key={movie.id} className="movie-card" onClick={() => openModal(movie.id)}>
-                  <Badge pill bg="primary" className="movie-rank">{index + 1}</Badge>
-                  <img src={movie.thumbnail} alt={movie.title} />
-                  <h3>{movie.title}</h3>
-                </div>
-              ))
-            ) : (
-              <p>No top movies</p>
-            )}
-          </div>
-        </div>
-        <div className="recommendations">
-          <h2>Recommendations</h2>
-          <div className="movie-row">
-            {recommendations.length > 0 ? (
-              recommendations.map((movie) => (
-                <div key={movie.id} className="movie-card" onClick={() => openModal(movie.id)}>
-                  <img src={movie.thumbnail} alt={movie.title} />
-                  <h3>{movie.title}</h3>
-                </div>
-              ))
-            ) : (
-              <p>No recommendations</p>
-            )}
-          </div>
-        </div>
-        <div className="currently-watching-up-next">
-          <div className="currently-watching">
-            <h2>Currently Watching</h2>
-            {currentlyWatching ? (
-              <div className="movie-card" onClick={() => openModal(currentlyWatching.movie_id)}>
-                <img src={`https://image.tmdb.org/t/p/w500/${currentlyWatching.poster}`} alt={currentlyWatching.title} />
-                <h3>{currentlyWatching.title}</h3>
+      <div className="movies">
+        <h2>Movies</h2>
+        <form onSubmit={handleSearch}>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search for movies..."
+          />
+          <button type="submit">Search</button>
+        </form>
+        <div className="movie-grid">
+          {searchResults.length > 0 ? (
+            searchResults.map((movie) => (
+              <div key={movie.id} className="movie-card" onClick={() => openModal(movie.id)}>
+                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+                <h3>{movie.title}</h3>
               </div>
-            ) : (
-              <p>No movie currently watching</p>
-            )}
-          </div>
-          <div className="up-next">
-            <h2>Up Next</h2>
-            {upNext ? (
-              <div className="movie-card" onClick={() => openModal(upNext.movie_id)}>
-                <img src={`https://image.tmdb.org/t/p/w500/${upNext.poster}`} alt={upNext.title} />
-                <h3>{upNext.title}</h3>
+            ))
+          ) : genreMovies.length > 0 ? (
+            genreMovies.map((movie) => (
+              <div key={movie.id} className="movie-card" onClick={() => openModal(movie.id)}>
+                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+                <h3>{movie.title}</h3>
               </div>
-            ) : (
-              <p>No movie up next</p>
-            )}
-          </div>
+            ))
+          ) : (
+            <p>No movies found.</p>
+          )}
         </div>
       </div>
       <ModalWrapper isOpen={isModalOpen} onRequestClose={closeModal}>
@@ -201,4 +135,4 @@ const ViewUserPage = () => {
   );
 };
 
-export default ViewUserPage;
+export default Browse;
