@@ -6,6 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { fetchGenres } from '../api'; // Import the fetchGenres function
 import './EditProfile.css';
 
+const API_URL = 'https://daisy-chain-6d6d9cb21bb4.herokuapp.com/api'; // Use your Heroku app URL
+
 function EditProfile() {
   const [profile, setProfile] = useState({
     username: '',
@@ -24,7 +26,7 @@ function EditProfile() {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/users/profile', {
+        const response = await axios.get(`${API_URL}/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -167,7 +169,7 @@ function EditProfile() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.put('http://localhost:5000/api/users/profile', profile, {
+      await axios.put(`${API_URL}/users/profile`, profile, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from './config'; // Import the API_URL
 import ModalWrapper from './ModalWrapper'; // Import the ModalWrapper component
 import MovieInfo from './MovieInfo'; // Import the MovieInfo component
 import Badge from 'react-bootstrap/Badge'; // Import Badge from react-bootstrap
@@ -34,7 +35,7 @@ const ViewUserPage = () => {
           window.location.href = '/login'; // Redirect to login page
           return;
         }
-        const userResponse = await axios.get(`http://localhost:5000/api/users/${username}`, {
+        const userResponse = await axios.get(`${API_URL}/users/${username}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -42,7 +43,7 @@ const ViewUserPage = () => {
         console.log('Fetched user data:', userResponse.data);
         setUser(userResponse.data);
 
-        const watchlistResponse = await axios.get(`http://localhost:5000/api/watchlist/${userResponse.data.id}`, {
+        const watchlistResponse = await axios.get(`${API_URL}/watchlist/${userResponse.data.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

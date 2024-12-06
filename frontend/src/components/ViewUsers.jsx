@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './ViewUsers.css';
 
+const API_URL = 'https://daisy-chain-6d6d9cb21bb4.herokuapp.com/api'; // Use your Heroku app URL
+
 const ViewUsers = () => {
   const [newestUsers, setNewestUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,7 +22,7 @@ const ViewUsers = () => {
           window.location.href = '/login'; // Redirect to login page
           return;
         }
-        const response = await axios.get('http://localhost:5000/api/users/newest', {
+        const response = await axios.get(`${API_URL}/users/newest`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -44,7 +46,7 @@ const ViewUsers = () => {
         window.location.href = '/login'; // Redirect to login page
         return;
       }
-      const response = await axios.get(`http://localhost:5000/api/users/search?query=${searchQuery}`, {
+      const response = await axios.get(`${API_URL}/users/search?query=${searchQuery}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

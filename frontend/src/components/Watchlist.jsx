@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from './config'; // Import the API_URL
 import './Watchlist.css'; // Ensure the correct CSS file is imported
 
 function Watchlist() {
@@ -17,7 +18,7 @@ function Watchlist() {
           window.location.href = '/login'; // Redirect to login page
           return;
         }
-        const response = await axios.get('http://localhost:5000/api/watchlist', {
+        const response = await axios.get(`${API_URL}/watchlist`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -34,7 +35,7 @@ function Watchlist() {
   const handleRemove = async (movieId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/watchlist/remove/${movieId}`, {
+      await axios.delete(`${API_URL}/watchlist/remove/${movieId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,7 +49,7 @@ function Watchlist() {
   const handleSetCurrentlyWatching = async (movieId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/watchlist/currently-watching/${movieId}`, {}, {
+      await axios.put(`${API_URL}/watchlist/currently-watching/${movieId}`, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,7 +71,7 @@ function Watchlist() {
   const handleSetNextUp = async (movieId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/watchlist/next-up/${movieId}`, {}, {
+      await axios.put(`${API_URL}/watchlist/next-up/${movieId}`, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
