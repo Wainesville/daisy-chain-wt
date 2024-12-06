@@ -82,7 +82,7 @@ const Browse = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="view-users-page">
+    <div className="browse-page">
       <div className="genres">
         <h2>Genres</h2>
         <ul>
