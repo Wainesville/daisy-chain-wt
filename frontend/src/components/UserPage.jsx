@@ -44,7 +44,11 @@ const UserPage = () => {
       }
     };
 
-    fetchUserData();
+    if (username) {
+      fetchUserData();
+    } else {
+      setError('Username is undefined');
+    }
   }, [username]);
 
   const handleMovieClick = (movieId) => {
