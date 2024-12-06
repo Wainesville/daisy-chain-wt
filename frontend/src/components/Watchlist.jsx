@@ -112,29 +112,33 @@ function Watchlist() {
             <button onClick={() => handleSetNextUp(nextUp.movie_id)}>Remove from Next Up</button>
           </div>
         )}
-        {watchlist.map((movie) => (
-          <div key={movie.movie_id} className="movie-card">
-            <Link to={`/movie/${movie.movie_id}`}>
-              <img src={`https://image.tmdb.org/t/p/w500/${movie.poster}`} alt={movie.title} />
-              <h3>{movie.title}</h3>
-            </Link>
-            <button onClick={() => handleRemove(movie.movie_id)}>Remove</button>
-            <div className="toggle-buttons">
-              <button
-                className={`toggle-button ${currentlyWatching && currentlyWatching.movie_id === movie.movie_id ? 'active' : ''}`}
-                onClick={() => handleSetCurrentlyWatching(movie.movie_id)}
-              >
-                Currently Watching
-              </button>
-              <button
-                className={`toggle-button ${nextUp && nextUp.movie_id === movie.movie_id ? 'active' : ''}`}
-                onClick={() => handleSetNextUp(movie.movie_id)}
-              >
-                Next Up
-              </button>
+        {watchlist && watchlist.length > 0 ? (
+          watchlist.map((movie) => (
+            <div key={movie.movie_id} className="movie-card">
+              <Link to={`/movie/${movie.movie_id}`}>
+                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster}`} alt={movie.title} />
+                <h3>{movie.title}</h3>
+              </Link>
+              <button onClick={() => handleRemove(movie.movie_id)}>Remove</button>
+              <div className="toggle-buttons">
+                <button
+                  className={`toggle-button ${currentlyWatching && currentlyWatching.movie_id === movie.movie_id ? 'active' : ''}`}
+                  onClick={() => handleSetCurrentlyWatching(movie.movie_id)}
+                >
+                  Currently Watching
+                </button>
+                <button
+                  className={`toggle-button ${nextUp && nextUp.movie_id === movie.movie_id ? 'active' : ''}`}
+                  onClick={() => handleSetNextUp(movie.movie_id)}
+                >
+                  Next Up
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No movies in your watchlist.</p>
+        )}
       </div>
     </div>
   );
