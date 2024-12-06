@@ -76,11 +76,15 @@ const UserPage = () => {
       <div className="user-watchlist">
         <h3>Watchlist</h3>
         <ul>
-          {user.watchlist.map((movie) => (
-            <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
-              {movie.title}
-            </li>
-          ))}
+          {user.watchlist && user.watchlist.length > 0 ? (
+            user.watchlist.map((movie) => (
+              <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
+                {movie.title}
+              </li>
+            ))
+          ) : (
+            <li>No movies in your watchlist.</li>
+          )}
         </ul>
       </div>
       {isModalOpen && (

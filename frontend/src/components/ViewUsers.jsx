@@ -64,14 +64,18 @@ const ViewUsers = () => {
     <div className="view-users-page">
       <h2>Newest Users</h2>
       <div className="user-grid">
-        {newestUsers.map((user) => (
-          <div key={user.id} className="user-card">
-            <Link to={`/view-user/${user.username}`}>
-              <img src={user.profile_picture || defaultProfilePicture} alt={`${user.username}'s profile`} />
-              <h3>{user.username}</h3>
-            </Link>
-          </div>
-        ))}
+        {newestUsers && newestUsers.length > 0 ? (
+          newestUsers.map((user) => (
+            <div key={user.id} className="user-card">
+              <Link to={`/view-user/${user.username}`}>
+                <img src={user.profile_picture || defaultProfilePicture} alt={`${user.username}'s profile`} />
+                <h3>{user.username}</h3>
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p>No newest users found.</p>
+        )}
       </div>
       <div className="search-section">
         <h2>Search Users</h2>
