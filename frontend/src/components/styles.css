@@ -67,7 +67,7 @@ input:focus, textarea:focus {
   border-color: #007bff;
 }
 
-label, h2 {
+label, .login-form h2, .register-form h2 {
   color: #f5f5f5; /* Smoke white text color */
 }
 
