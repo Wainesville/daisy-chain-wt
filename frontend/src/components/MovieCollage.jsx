@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './MovieCollage.css';
+import './MovieCollage.css'; // Import the new CSS file
 
 const API_KEY = '8feb4db25b7185d740785fc6b6f0e850'; // Replace with your API key
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -27,7 +27,6 @@ const MovieCollage = () => {
           if (totalPosters >= 30) {
             const uniquePosters = Array.from(new Map(posters.map(movie => [movie.id, movie])).values());
             setMovies(uniquePosters.slice(0, 30));
-            console.log('Movies fetched:', uniquePosters.slice(0, 30)); // Add this line
             return;
           }
 
@@ -46,7 +45,6 @@ const MovieCollage = () => {
     <div className="movie-collage">
       {movies.map((movie) => {
         const imageUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-        console.log(imageUrl); // Log the image URL
         return (
           <img
             key={movie.id}

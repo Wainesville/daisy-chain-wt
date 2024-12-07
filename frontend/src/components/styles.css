@@ -128,7 +128,7 @@ h2 {
 /* Form Container */
 .form-container {
   position: relative;
-  z-index: 1; /* Ensure it is above the collage */
+  z-index: 2; /* Ensure it is above the collage */
   background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
   padding: 20px;
   border-radius: 10px;

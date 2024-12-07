@@ -10,7 +10,7 @@
     position: absolute; /* Position absolutely to fill the screen */
     top: 0;
     left: 0;
-    z-index: -1; /* Place behind other content */
+    z-index: 1; /* Place behind the forms */
   }
   
   .collage-image {
