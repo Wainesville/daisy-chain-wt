@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './MOvieCollage.css';
+import './MovieCollage.css';
 
 const API_KEY = '8feb4db25b7185d740785fc6b6f0e850'; // Replace with your API key
 const BASE_URL = 'https://api.themoviedb.org/3';
