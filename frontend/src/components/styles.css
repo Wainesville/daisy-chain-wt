@@ -17,6 +17,10 @@ html, body, #root {
   width: 100%;
 }
 
+.transparent-background {
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
 body {
   font-family: 'Arial', sans-serif;
   font-size: 16px;
@@ -118,4 +122,53 @@ h2 {
   color: #ffffff; /* Light text color */
   margin-top: 10px; /* Add space between the title and the image */
   word-wrap: break-word; /* Ensure long titles wrap onto a second line */
+}
+
+/* Form Container */
+.form-container {
+  position: relative;
+  z-index: 1; /* Ensure it is above the collage */
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
 }
