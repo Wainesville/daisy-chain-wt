@@ -8,6 +8,7 @@ import { addToWatchlist, removeFromWatchlist } from '../api'; // Import the addT
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = '8feb4db25b7185d740785fc6b6f0e850';
+const API_URL = 'https://daisy-chain-6d6d9cb21bb4.herokuapp.com/api'; // Use your Heroku app URL
 
 const MovieInfo = ({ id: propId, onClose }) => {
   const { id: paramId } = useParams();
@@ -46,7 +47,7 @@ const MovieInfo = ({ id: propId, onClose }) => {
 
         const token = localStorage.getItem('token');
         if (token) {
-          const watchlistResponse = await axios.get(`http://localhost:5000/api/watchlist`, {
+          const watchlistResponse = await axios.get(`${API_URL}/watchlist`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -113,7 +114,7 @@ const MovieInfo = ({ id: propId, onClose }) => {
 
       console.log('Sending recommendation data:', recommendationData);
 
-      await axios.post('http://localhost:5000/api/recommendations/add', recommendationData, {
+      await axios.post(`${API_URL}/recommendations/add`, recommendationData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
