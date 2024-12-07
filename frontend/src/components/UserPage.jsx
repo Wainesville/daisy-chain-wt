@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ModalWrapper from './ModalWrapper';
-import MovieInfo from './MovieInfo';
-import Badge from 'react-bootstrap/Badge';
+import ModalWrapper from './ModalWrapper'; // Import the ModalWrapper component
+import MovieInfo from './MovieInfo'; // Import the MovieInfo component
+import Badge from 'react-bootstrap/Badge'; // Import Badge from react-bootstrap
 import './UserPage.css';
 
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -14,6 +14,11 @@ const UserPage = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [watchlist, setWatchlist] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [currentlyWatching, setCurrentlyWatching] = useState(null);
+  const [topMovies, setTopMovies] = useState([]);
+  const [upNext, setUpNext] = useState(null);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
@@ -38,64 +43,192 @@ const UserPage = () => {
         });
         console.log('Fetched user data:', userResponse.data);
         setUser(userResponse.data);
+
+        const watchlistResponse = await axios.get(`${API_URL}/watchlist/${userResponse.data.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setWatchlist(watchlistResponse.data);
+
+        // Fetch recommendations details
+        if (userResponse.data.recommendations && userResponse.data.recommendations.length > 0) {
+          const recommendationsDetails = await Promise.all(
+            userResponse.data.recommendations.map(async (movieId) => {
+              if (!movieId) return null; // Skip null or undefined movie IDs
+              try {
+                const movieResponse = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+                  params: {
+                    api_key: API_KEY,
+                  },
+                });
+                console.log('Fetched movie data:', movieResponse.data);
+                return {
+                  ...movieResponse.data,
+                  thumbnail: `https://image.tmdb.org/t/p/w500/${movieResponse.data.poster_path}`,
+                };
+              } catch (error) {
+                console.error(`Failed to fetch movie with ID ${movieId}:`, error);
+                return null;
+              }
+            })
+          );
+          setRecommendations(recommendationsDetails.filter(movie => movie !== null));
+        }
+
+        // Set currently watching and up next
+        if (watchlistResponse.data.length > 0) {
+          setCurrentlyWatching(watchlistResponse.data[0]);
+          setUpNext(watchlistResponse.data[1] || null);
+        }
+
+        // Fetch top 5 movies details
+        if (userResponse.data.top_movies && userResponse.data.top_movies.length > 0) {
+          const topMoviesDetails = await Promise.all(
+            userResponse.data.top_movies.map(async (movieId) => {
+              if (!movieId) return null; // Skip null or undefined movie IDs
+              try {
+                const movieResponse = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+                  params: {
+                    api_key: API_KEY,
+                  },
+                });
+                console.log('Fetched movie data:', movieResponse.data);
+                return {
+                  ...movieResponse.data,
+                  thumbnail: `https://image.tmdb.org/t/p/w500/${movieResponse.data.poster_path}`,
+                };
+              } catch (error) {
+                console.error(`Failed to fetch movie with ID ${movieId}:`, error);
+                return null;
+              }
+            })
+          );
+          setTopMovies(topMoviesDetails.filter(movie => movie !== null));
+        }
       } catch (error) {
-        console.error('Failed to fetch user data:', error.response ? error.response.data : error.message);
-        setError(error.response ? error.response.data : error.message);
+        console.error('Failed to fetch user data:', error);
+        setError('User not found');
       }
     };
 
-    if (username) {
-      fetchUserData();
-    } else {
-      setError('Username is undefined');
-    }
+    fetchUserData();
   }, [username]);
 
-  const handleMovieClick = (movieId) => {
+  const handleRemoveRecommendation = async (movieId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found in localStorage');
+        return;
+      }
+
+      await axios.post(`${API_URL}/recommendations/remove`, {
+        movieId,
+        userId: user.id,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Update the recommendations state
+      setRecommendations(recommendations.filter(movie => movie.id !== movieId));
+      console.log('Recommendation removed successfully');
+    } catch (error) {
+      console.error('Failed to remove recommendation:', error);
+    }
+  };
+
+  const openModal = (movieId) => {
     setSelectedMovieId(movieId);
     setIsModalOpen(true);
   };
 
-  const handleModalClose = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
     setSelectedMovieId(null);
   };
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const handleEditProfile = () => {
+    navigate('/edit-profile');
+  };
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  if (error) return <div>{error}</div>;
+  if (!user) return <div>Loading...</div>;
 
   return (
     <div className="user-page">
-      <div className="user-info">
-        <img src={user.profilePicture || defaultProfilePicture} alt={`${user.username}'s profile`} />
-        <h2>{user.username}</h2>
-        <p>{user.bio}</p>
-        <Badge bg="primary">{user.role}</Badge>
+      <div className="user-header">
+        <img src={user.profile_picture || defaultProfilePicture} alt={`${user.username}'s profile`} className="user-image" />
+        <div className="user-info">
+          <h1>{user.username}</h1>
+          <p className="user-bio">{user.bio}</p>
+          <p className="user-genres"><strong>Favorite Genres:</strong> {user.favorite_genres ? user.favorite_genres.join(', ') : 'No favorite genres listed'}</p>
+          <button onClick={handleEditProfile} className="edit-profile-button">Edit Profile</button>
+        </div>
       </div>
-      <div className="user-watchlist">
-        <h3>Watchlist</h3>
-        <ul>
-          {user.watchlist && user.watchlist.length > 0 ? (
-            user.watchlist.map((movie) => (
-              <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
-                {movie.title}
-              </li>
-            ))
-          ) : (
-            <li>No movies in your watchlist.</li>
-          )}
-        </ul>
+      <div className="user-content">
+        <div className="top-movies">
+          <h2>Top 5 Movies</h2>
+          <div className="movie-row">
+            {topMovies.length > 0 ? (
+              topMovies.map((movie, index) => (
+                <div key={movie.id} className="movie-card" onClick={() => openModal(movie.id)}>
+                  <Badge pill bg="primary" className="movie-rank">{index + 1}</Badge>
+                  <img src={movie.thumbnail} alt={movie.title} />
+                  <h3>{movie.title}</h3>
+                </div>
+              ))
+            ) : (
+              <p>No top movies</p>
+            )}
+          </div>
+        </div>
+        <div className="recommendations">
+          <h2>Recommendations</h2>
+          <div className="movie-row">
+            {recommendations.length > 0 ? (
+              recommendations.map((movie) => (
+                <div key={movie.id} className="movie-card" onClick={() => openModal(movie.id)}>
+                  <img src={movie.thumbnail} alt={movie.title} />
+                  <h3>{movie.title}</h3>
+                  <button onClick={(e) => { e.stopPropagation(); handleRemoveRecommendation(movie.id); }}>Remove</button>
+                </div>
+              ))
+            ) : (
+              <p>No recommendations</p>
+            )}
+          </div>
+        </div>
+        <div className="currently-watching-up-next">
+          <div className="currently-watching">
+            <h2>Currently Watching</h2>
+            {currentlyWatching ? (
+              <div className="movie-card" onClick={() => openModal(currentlyWatching.movie_id)}>
+                <img src={`https://image.tmdb.org/t/p/w500/${currentlyWatching.poster}`} alt={currentlyWatching.title} />
+                <h3>{currentlyWatching.title}</h3>
+              </div>
+            ) : (
+              <p>No movie currently watching</p>
+            )}
+          </div>
+          <div className="up-next">
+            <h2>Up Next</h2>
+            {upNext ? (
+              <div className="movie-card" onClick={() => openModal(upNext.movie_id)}>
+                <img src={`https://image.tmdb.org/t/p/w500/${upNext.poster}`} alt={upNext.title} />
+                <h3>{upNext.title}</h3>
+              </div>
+            ) : (
+              <p>No movie up next</p>
+            )}
+          </div>
+        </div>
       </div>
-      {isModalOpen && (
-        <ModalWrapper onClose={handleModalClose}>
-          <MovieInfo movieId={selectedMovieId} />
-        </ModalWrapper>
-      )}
+      <ModalWrapper isOpen={isModalOpen} onRequestClose={closeModal}>
+        {selectedMovieId && <MovieInfo id={selectedMovieId} onClose={closeModal} />}
+      </ModalWrapper>
     </div>
   );
 };
