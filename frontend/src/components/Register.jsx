@@ -27,7 +27,7 @@ function Register() {
   return (
     <div className="register-page">
       <MovieCollage />
-      <div id="root" className="transparent-background">
+      <div className="transparent-background">
         <div className="form-container">
           <form onSubmit={handleSubmit} className="register-form">
             <h2>Register</h2>

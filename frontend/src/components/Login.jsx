@@ -26,7 +26,7 @@ function Login({ handleLogin }) {
   return (
     <div className="login-page">
       <MovieCollage />
-      <div id="root" className="transparent-background">
+      <div className="transparent-background">
         <div className="form-container">
           <form onSubmit={handleSubmit} className="login-form">
             <h2>Login</h2>
