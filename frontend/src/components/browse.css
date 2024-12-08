@@ -6,10 +6,6 @@
   background-color: black; /* Set background to black */
   color: white; /* Set text color to white */
   min-height: 100vh; /* Ensure it fills the viewport */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 h2 {

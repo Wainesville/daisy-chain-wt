@@ -1,138 +1,105 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { API_URL } from './config'; // Import the API_URL
-import ModalWrapper from './ModalWrapper'; // Import the ModalWrapper component
-import MovieInfo from './MovieInfo'; // Import the MovieInfo component
-import Badge from 'react-bootstrap/Badge'; // Import Badge from react-bootstrap
-import './styles.css'; // Use the global styles
+import { fetchGenres, fetchMoviesByGenre, searchMovies } from '../api';
+import './styles.css'; // Importing the consolidated CSS for styling
 
-const BASE_URL = 'https://api.themoviedb.org/3';
-const API_KEY = '8feb4db25b7185d740785fc6b6f0e850';
+const ITEMS_PER_PAGE = 60;
 
-const Browse = () => {
+function Browse({ openModal }) {
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState('');
   const [genreMovies, setGenreMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const [allMovies, setAllMovies] = useState(new Set()); // To keep track of all unique movies
 
+  // Fetch genres when the component mounts
   useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/genre/movie/list`, {
-          params: {
-            api_key: API_KEY,
-          },
-        });
-        setGenres(response.data.genres);
-      } catch (error) {
-        console.error('Failed to fetch genres:', error);
-        setError('Failed to fetch genres');
-      }
+    const loadGenres = async () => {
+      const genreList = await fetchGenres();
+      setGenres(genreList);
     };
-
-    fetchGenres();
+    loadGenres();
   }, []);
 
+  // Handle genre selection
   const handleGenreClick = async (genreId) => {
     setSelectedGenre(genreId);
-    try {
-      const response = await axios.get(`${BASE_URL}/discover/movie`, {
-        params: {
-          api_key: API_KEY,
-          with_genres: genreId,
-        },
-      });
-      setGenreMovies(response.data.results);
-    } catch (error) {
-      console.error('Failed to fetch movies by genre:', error);
-      setError('Failed to fetch movies by genre');
-    }
+    setSearchResults([]); // Clear search results when a genre is selected
+    setSearchTerm(''); // Clear search term when a genre is selected
+    setAllMovies(new Set()); // Reset the set of all movies
+    await loadMoviesByGenre(genreId); // Load movies for the selected genre
   };
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.get(`${BASE_URL}/search/movie`, {
-        params: {
-          api_key: API_KEY,
-          query: searchTerm,
-        },
-      });
-      setSearchResults(response.data.results);
-    } catch (error) {
-      console.error('Failed to search movies:', error);
-      setError('Failed to search movies');
-    }
+  // Load movies by genre
+  const loadMoviesByGenre = async (genreId) => {
+    const results = await fetchMoviesByGenre(genreId, 1); // Fetch the first page
+    const uniqueMovies = results.filter(movie => !allMovies.has(movie.id));
+    setAllMovies(new Set(uniqueMovies.map(movie => movie.id)));
+    setGenreMovies(uniqueMovies);
   };
 
-  const openModal = (movieId) => {
-    setSelectedMovieId(movieId);
-    setIsModalOpen(true);
+  // Handle movie search
+  const handleSearch = async () => {
+    const results = await searchMovies(searchTerm); // Fetch search results
+    setSearchResults(results);
+    setSelectedGenre(''); // Clear selected genre when searching
   };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedMovieId(null);
-  };
-
-  if (error) return <div>{error}</div>;
 
   return (
     <div className="browse-page">
-      <div className="genres">
-        <h2>Genres</h2>
-        <ul>
-          {genres && genres.length > 0 ? (
-            genres.map((genre) => (
-              <li key={genre.id} onClick={() => handleGenreClick(genre.id)}>
-                {genre.name}
-              </li>
-            ))
-          ) : (
-            <li>No genres available.</li>
-          )}
-        </ul>
+      <h2>Select a Genre</h2>
+      <div className="browse-container">
+        {genres.map((genre) => (
+          <button key={genre.id} onClick={() => handleGenreClick(genre.id)}>
+            {genre.name}
+          </button>
+        ))}
       </div>
-      <div className="movies">
-        <h2>Movies</h2>
-        <form onSubmit={handleSearch}>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search for movies..."
-          />
-          <button type="submit">Search</button>
-        </form>
-        <div className="movie-grid">
-          {searchResults.length > 0 ? (
-            searchResults.map((movie) => (
-              <div key={movie.id} className="movie-card" onClick={() => openModal(movie.id)}>
-                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
+
+      <div>
+        <h2>Search Movies</h2>
+        <input
+          placeholder="Search for a movie..."
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={handleSearch}>Search</button>
+      </div>
+
+      {searchResults.length > 0 && (
+        <div>
+          <h2>Search Results</h2>
+          <div className="movie-grid">
+            {searchResults.map((movie) => (
+              <div key={movie.id} className="movie-card">
+                <button onClick={() => openModal(movie.id)}>
+                  <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+                </button>
                 <h3>{movie.title}</h3>
               </div>
-            ))
-          ) : genreMovies.length > 0 ? (
-            genreMovies.map((movie) => (
-              <div key={movie.id} className="movie-card" onClick={() => openModal(movie.id)}>
-                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} alt={movie.title} />
-                <h3>{movie.title}</h3>
-              </div>
-            ))
-          ) : (
-            <p>No movies found.</p>
-          )}
+            ))}
+          </div>
         </div>
-      </div>
-      <ModalWrapper isOpen={isModalOpen} onRequestClose={closeModal}>
-        {selectedMovieId && <MovieInfo id={selectedMovieId} onClose={closeModal} />}
-      </ModalWrapper>
+      )}
+
+      {selectedGenre && genreMovies.length > 0 && (
+        <div>
+          <h2>Movies in {genres.find((g) => g.id === parseInt(selectedGenre))?.name}</h2>
+          <div className="movie-grid">
+            {genreMovies.map((movie) => (
+              <div key={movie.id} className="movie-card">
+                <button onClick={() => openModal(movie.id)}>
+                  <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+                </button>
+                <h3>{movie.title}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
-};
+}
 
 export default Browse;
