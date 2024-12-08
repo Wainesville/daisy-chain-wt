@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchGenres, fetchMoviesByGenre, searchMovies } from '../api';
 import './styles.css'; // Importing the consolidated CSS for styling
+import './browse.css'; // Importing the specific CSS for the Browse page
 
 const ITEMS_PER_PAGE = 60;
 
@@ -48,9 +49,9 @@ function Browse({ openModal }) {
   return (
     <div className="browse-page">
       <h2>Select a Genre</h2>
-      <div className="browse-container">
+      <div className="browse-container genre-button-group">
         {genres.map((genre) => (
-          <button key={genre.id} onClick={() => handleGenreClick(genre.id)}>
+          <button key={genre.id} className="genre-button" onClick={() => handleGenreClick(genre.id)}>
             {genre.name}
           </button>
         ))}
