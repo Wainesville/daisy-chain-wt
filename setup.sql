@@ -50,33 +50,8 @@ CREATE TABLE recommendations (
 CREATE TABLE watchlist (
     user_id INTEGER NOT NULL REFERENCES users(id),
     movie_id INTEGER NOT NULL REFERENCES movies(id),
+    title VARCHAR(255) NOT NULL,
+    poster VARCHAR(255) NOT NULL,
     PRIMARY KEY (user_id, movie_id)
 );
 
--- Insert example data into users table
-INSERT INTO users (username, password, email, bio, profile_picture, favorite_genres, top_movies, recommendations)
-VALUES
-('john_doe', 'password123', 'john@example.com', 'Movie enthusiast', 'https://example.com/john.jpg', '{"Action", "Comedy"}', '{1, 2}', '{1, 2}'),
-('jane_doe', 'password123', 'jane@example.com', 'Love watching movies', 'https://example.com/jane.jpg', '{"Drama", "Horror"}', '{3, 4}', '{3, 4}');
-
--- Insert example data into movies table
-INSERT INTO movies (title, thumbnail)
-VALUES
-('Inception', 'https://example.com/inception.jpg'),
-('The Dark Knight', 'https://example.com/dark_knight.jpg'),
-('Interstellar', 'https://example.com/interstellar.jpg'),
-('The Matrix', 'https://example.com/matrix.jpg');
-
--- Insert example data into recommendations table
-INSERT INTO recommendations (user_id, title, content, movie_id, recommended_by, recommended_to, movie_title)
-VALUES
-(1, 'Great Movie', 'You should watch Inception', 1, 1, 2, 'Inception'),
-(2, 'Must Watch', 'The Dark Knight is amazing', 2, 2, 1, 'The Dark Knight');
-
--- Insert example data into watchlist table
-INSERT INTO watchlist (user_id, movie_id)
-VALUES
-(1, 1),
-(1, 2),
-(2, 3),
-(2, 4);
