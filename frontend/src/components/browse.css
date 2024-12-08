@@ -21,22 +21,24 @@ h2 {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px; /* Space between genre buttons */
   margin-bottom: 20px;
 }
 
 .genre-button {
-  background-color: #ff5e57;
-  color: white;
+  background-color: #ffd700; /* Gold color */
+  color: black;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add some depth */
 }
 
 .genre-button:hover {
-  background-color: #ff4a3d; /* Darker shade on hover */
+  background-color: #e6b800; /* Darker shade on hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
 }
 
 .movie-grid {
