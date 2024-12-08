@@ -21,24 +21,22 @@ h2 {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 15px; /* Space between genre buttons */
+  gap: 10px;
   margin-bottom: 20px;
 }
 
 .genre-button {
-  background-color: #ffd700; /* Gold color */
-  color: black;
+  background-color: #ff5e57;
+  color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add some depth */
+  transition: background-color 0.3s ease;
 }
 
 .genre-button:hover {
-  background-color: #e6b800; /* Darker shade on hover */
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+  background-color: #ff4a3d; /* Darker shade on hover */
 }
 
 .movie-grid {
@@ -59,7 +57,7 @@ h2 {
 }
 
 .movie-card img {
-  width: 200px; /* Set width to 200px */
+  width: 100%;
   height: auto; /* Maintain aspect ratio */
 }
 
