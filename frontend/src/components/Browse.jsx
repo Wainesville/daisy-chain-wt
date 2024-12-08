@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchGenres, fetchMoviesByGenre, searchMovies } from '../api';
-import './styles.css'; // Importing the consolidated CSS for styling
+// import './styles.css'; // Importing the consolidated CSS for styling
 import './browse.css'; // Importing the specific CSS for the Browse page
 
 const ITEMS_PER_PAGE = 60;
