@@ -72,6 +72,17 @@ label, .login-form h2, .register-form h2 {
   color: #f5f5f5; /* Smoke white text color */
 }
 
+/* Card Styles */
+.card {
+  background-color: #292929; /* Dark background color for cards */
+  border-radius: 8px; /* Rounded corners */
+  overflow: hidden; /* Hide overflow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 20px;
+  margin: 20px;
+  color: #ffffff; /* Light text color */
+}
+
 /* Page Specific Styles */
 .watchlist, .view-users-page, .edit-profile, .browse-page {
   padding: 20px;
