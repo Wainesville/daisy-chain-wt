@@ -13,7 +13,6 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: #000000;
   align-items: center;
   width: 100%;
   min-height: 100vh; /* Ensure the root takes up the full height of the viewport */
@@ -103,9 +102,10 @@ h2 {
 
 /* Movie Grid */
 .movie-grid, .user-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
   gap: 20px; /* Space between items */
+  padding: 20px; /* Extra padding around the exterior edges */
   justify-content: center; /* Center align the items */
 }
 
@@ -120,7 +120,6 @@ h2 {
   align-items: center;
   padding: 10px;
   text-align: center; /* Center align text */
-  max-width: 200px; /* Set a max width for the cards */
 }
 
 .movie-card:hover, .user-card:hover {
