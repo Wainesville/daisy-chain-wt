@@ -21,12 +21,12 @@ const getUserProfile = async (req, res) => {
 // Update user profile
 const updateUserProfile = async (req, res) => {
   const userId = req.user.id;
-  const { profilePicture, bio, favorite_genres, top_movies, recommendations } = req.body;
+  const { profile_picture, bio, favorite_genres, top_movies, recommendations } = req.body;
 
   try {
     const result = await pool.query(
       'UPDATE users SET profile_picture = $1, bio = $2, favorite_genres = $3, top_movies = $4, recommendations = $5 WHERE id = $6 RETURNING *',
-      [profilePicture, bio, favorite_genres, top_movies, recommendations, userId]
+      [profile_picture, bio, favorite_genres, top_movies, recommendations, userId]
     );
 
     if (!result.rows || result.rows.length === 0) {
