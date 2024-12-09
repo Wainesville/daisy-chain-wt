@@ -8,14 +8,16 @@
   display: flex;
   flex-direction: column;
   align-items: center; /* Center align the content */
+  justify-content: center; /* Center content vertically */
 }
 
 /* Header */
 .watchlist h2 {
   font-family: 'Arial', sans-serif;
   font-size: 2em; /* Larger font size */
-  color: #007bff; /* Primary color */
+  color: #ffffff; /* White color */
   margin-bottom: 20px;
+  text-align: center; /* Center align the header */
 }
 
 /* Movie Grid */
