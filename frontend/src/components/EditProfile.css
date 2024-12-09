@@ -9,6 +9,7 @@
 
 .edit-profile {
   width: 100%;
+  background-color: #000000; /* Black background color */
   display: flex;
   justify-content: center;
   align-items: center;
