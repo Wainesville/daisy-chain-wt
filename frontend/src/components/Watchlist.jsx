@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Watchlist.css'; // Ensure the correct CSS file is imported
 
@@ -9,15 +9,15 @@ function Watchlist() {
   const [watchlist, setWatchlist] = useState([]);
   const [currentlyWatching, setCurrentlyWatching] = useState(null);
   const [nextUp, setNextUp] = useState(null);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadWatchlist = async () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          console.error('No token found in localStorage');
-          window.location.href = '/login'; // Redirect to login page
-          return;
+          throw new Error('No token found in localStorage');
         }
         const response = await axios.get(`${API_URL}/watchlist`, {
           headers: {
@@ -27,11 +27,15 @@ function Watchlist() {
         setWatchlist(response.data);
       } catch (error) {
         console.error('Error fetching watchlist:', error);
+        setError('You must be logged in to view your watchlist.');
+        setTimeout(() => {
+          navigate('/login'); // Redirect to login page after 3 seconds
+        }, 3000);
       }
     };
 
     loadWatchlist();
-  }, []);
+  }, [navigate]);
 
   const handleRemove = async (movieId) => {
     try {
@@ -90,6 +94,10 @@ function Watchlist() {
       console.error('Failed to set next up:', error);
     }
   };
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
     <div className="watchlist">

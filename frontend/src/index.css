@@ -13,6 +13,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #242424; /* Ensure the background color is consistent */
+  color: rgba(255, 255, 255, 0.87); /* Ensure the text color is consistent */
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -23,7 +34,6 @@ a:hover {
 }
 
 body {
-  margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
