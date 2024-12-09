@@ -24,6 +24,8 @@
 /* Movie Grid */
 .movie-grid {
   display: flex;
+  padding: 20px;
+  background-color: #000000; /* Dark background color */
   flex-wrap: wrap;
   gap: 20px; /* Space between movie cards */
   width: 100%; /* Full width */
