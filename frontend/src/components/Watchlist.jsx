@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL } from './config'; // Import the API_URL
-import './styles.css'; // Use the global styles
+import './Watchlist.css'; // Ensure the correct CSS file is imported
+
+const API_URL = 'https://daisy-chain-6d6d9cb21bb4.herokuapp.com/api'; // Use your Heroku app URL
 
 function Watchlist() {
   const [watchlist, setWatchlist] = useState([]);
@@ -112,33 +113,29 @@ function Watchlist() {
             <button onClick={() => handleSetNextUp(nextUp.movie_id)}>Remove from Next Up</button>
           </div>
         )}
-        {watchlist && watchlist.length > 0 ? (
-          watchlist.map((movie) => (
-            <div key={movie.movie_id} className="movie-card">
-              <Link to={`/movie/${movie.movie_id}`}>
-                <img src={`https://image.tmdb.org/t/p/w500/${movie.poster}`} alt={movie.title} />
-                <h3>{movie.title}</h3>
-              </Link>
-              <button onClick={() => handleRemove(movie.movie_id)}>Remove</button>
-              <div className="toggle-buttons">
-                <button
-                  className={`toggle-button ${currentlyWatching && currentlyWatching.movie_id === movie.movie_id ? 'active' : ''}`}
-                  onClick={() => handleSetCurrentlyWatching(movie.movie_id)}
-                >
-                  Currently Watching
-                </button>
-                <button
-                  className={`toggle-button ${nextUp && nextUp.movie_id === movie.movie_id ? 'active' : ''}`}
-                  onClick={() => handleSetNextUp(movie.movie_id)}
-                >
-                  Next Up
-                </button>
-              </div>
+        {watchlist.map((movie) => (
+          <div key={movie.movie_id} className="movie-card">
+            <Link to={`/movie/${movie.movie_id}`}>
+              <img src={`https://image.tmdb.org/t/p/w500/${movie.poster}`} alt={movie.title} />
+              <h3>{movie.title}</h3>
+            </Link>
+            <button onClick={() => handleRemove(movie.movie_id)}>Remove</button>
+            <div className="toggle-buttons">
+              <button
+                className={`toggle-button ${currentlyWatching && currentlyWatching.movie_id === movie.movie_id ? 'active' : ''}`}
+                onClick={() => handleSetCurrentlyWatching(movie.movie_id)}
+              >
+                Currently Watching
+              </button>
+              <button
+                className={`toggle-button ${nextUp && nextUp.movie_id === movie.movie_id ? 'active' : ''}`}
+                onClick={() => handleSetNextUp(movie.movie_id)}
+              >
+                Next Up
+              </button>
             </div>
-          ))
-        ) : (
-          <p>No movies in your watchlist.</p>
-        )}
+          </div>
+        ))}
       </div>
     </div>
   );

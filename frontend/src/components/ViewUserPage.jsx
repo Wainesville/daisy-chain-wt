@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { API_URL } from './config'; // Import the API_URL
 import ModalWrapper from './ModalWrapper'; // Import the ModalWrapper component
 import MovieInfo from './MovieInfo'; // Import the MovieInfo component
 import Badge from 'react-bootstrap/Badge'; // Import Badge from react-bootstrap
@@ -9,6 +8,7 @@ import './UserPage.css'; // Reuse the UserPage.css styles
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = '8feb4db25b7185d740785fc6b6f0e850';
+const API_URL = 'https://daisy-chain-6d6d9cb21bb4.herokuapp.com/api'; // Use your Heroku app URL
 
 const ViewUserPage = () => {
   const { username } = useParams();

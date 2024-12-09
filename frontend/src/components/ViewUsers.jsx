@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './styles.css';
+import './ViewUsers.css';
 
 const API_URL = 'https://daisy-chain-6d6d9cb21bb4.herokuapp.com/api'; // Use your Heroku app URL
 
@@ -64,18 +64,14 @@ const ViewUsers = () => {
     <div className="view-users-page">
       <h2>Newest Users</h2>
       <div className="user-grid">
-        {newestUsers && newestUsers.length > 0 ? (
-          newestUsers.map((user) => (
-            <div key={user.id} className="user-card">
-              <Link to={`/view-user/${user.username}`}>
-                <img src={user.profile_picture || defaultProfilePicture} alt={`${user.username}'s profile`} />
-                <h3>{user.username}</h3>
-              </Link>
-            </div>
-          ))
-        ) : (
-          <p>No newest users found.</p>
-        )}
+        {newestUsers.map((user) => (
+          <div key={user.id} className="user-card">
+            <Link to={`/view-user/${user.username}`}>
+              <img src={user.profile_picture || defaultProfilePicture} alt={`${user.username}'s profile`} />
+              <h3>{user.username}</h3>
+            </Link>
+          </div>
+        ))}
       </div>
       <div className="search-section">
         <h2>Search Users</h2>
