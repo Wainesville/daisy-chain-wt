@@ -25,9 +25,8 @@
 .movie-grid {
   display: flex;
   flex-wrap: wrap;
-  background-color: #000000; /* Dark background color */
   gap: 20px; /* Space between movie cards */
-  width: 100vh; /* Full width */
+  width: 100%; /* Full width */
   justify-content: center; /* Center align the movie cards */
 }
 
