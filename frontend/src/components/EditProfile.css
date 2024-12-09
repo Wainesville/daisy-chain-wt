@@ -1,16 +1,21 @@
-.edit-profile {
-  padding: 0; /* Remove padding */
+.edit-profile-background {
   background-color: #000000; /* Black background color */
-  color: #ffffff; /* Light text color */
-  min-height: 100vh; /* Ensure the page takes up the full height of the viewport */
+  min-height: 100vh; /* Ensure the background covers the full height of the viewport */
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%; /* Ensure the page takes up the full width of the viewport */
+  width: 100%; /* Ensure the background covers the full width of the viewport */
+}
+
+.edit-profile {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-container {
-  background-color: #000000; /* Black background color for the form container */
+  background-color: #1c1c1c; /* Slightly lighter dark background for the form container */
   color: #ffffff; /* Light text color */
   padding: 30px;
   border-radius: 8px;
