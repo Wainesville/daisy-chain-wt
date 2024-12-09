@@ -1,6 +1,6 @@
 /* Watchlist Container */
 .watchlist {
-  padding: 20px;
+  padding: 20px 0; /* Remove horizontal padding */
   padding-top: 60px; /* Add padding to the top to account for the header height */
   background-color: #000000; /* Dark background color */
   color: #ffffff; /* Light text color */
@@ -24,12 +24,11 @@
 /* Movie Grid */
 .movie-grid {
   display: flex;
-  padding: 20px;
-  background-color: #000000; /* Dark background color */
   flex-wrap: wrap;
   gap: 20px; /* Space between movie cards */
   width: 100%; /* Full width */
   justify-content: center; /* Center align the movie cards */
+  background-color: #000000; /* Ensure the background color is black */
 }
 
 /* Movie Card */
