@@ -63,10 +63,12 @@ function Watchlist() {
       const selectedMovie = watchlist.find((movie) => movie.movie_id === movieId);
       if (selectedMovie) {
         setWatchlist(watchlist.filter((movie) => movie.movie_id !== movieId));
-        if (currentlyWatching) {
+        if (currentlyWatching && currentlyWatching.movie_id !== movieId) {
           setWatchlist((prevWatchlist) => [...prevWatchlist, currentlyWatching]);
         }
         setCurrentlyWatching(selectedMovie);
+      } else {
+        setCurrentlyWatching(null);
       }
     } catch (error) {
       console.error('Failed to set currently watching:', error);
@@ -85,10 +87,12 @@ function Watchlist() {
       const selectedMovie = watchlist.find((movie) => movie.movie_id === movieId);
       if (selectedMovie) {
         setWatchlist(watchlist.filter((movie) => movie.movie_id !== movieId));
-        if (nextUp) {
+        if (nextUp && nextUp.movie_id !== movieId) {
           setWatchlist((prevWatchlist) => [...prevWatchlist, nextUp]);
         }
         setNextUp(selectedMovie);
+      } else {
+        setNextUp(null);
       }
     } catch (error) {
       console.error('Failed to set next up:', error);
@@ -109,7 +113,7 @@ function Watchlist() {
               <img src={`https://image.tmdb.org/t/p/w500/${currentlyWatching.poster}`} alt={currentlyWatching.title} />
               <h3>{currentlyWatching.title}</h3>
             </Link>
-            <button onClick={() => handleSetCurrentlyWatching(currentlyWatching.movie_id)}>Remove from Currently Watching</button>
+            <button onClick={() => handleSetCurrentlyWatching(null)}>Remove from Currently Watching</button>
           </div>
         )}
         {nextUp && (
@@ -118,7 +122,7 @@ function Watchlist() {
               <img src={`https://image.tmdb.org/t/p/w500/${nextUp.poster}`} alt={nextUp.title} />
               <h3>{nextUp.title}</h3>
             </Link>
-            <button onClick={() => handleSetNextUp(nextUp.movie_id)}>Remove from Next Up</button>
+            <button onClick={() => handleSetNextUp(null)}>Remove from Next Up</button>
           </div>
         )}
         {watchlist.map((movie) => (
