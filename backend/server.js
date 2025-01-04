@@ -5,7 +5,7 @@ const authenticate = require('./middleware/authenticate'); // Adjust path if nee
 require('dotenv').config();
 const pool = require('./db'); // Import the database pool
 
-console.log('Type of authenticate:', typeof authenticate); // Add this line
+// console.log('Type of authenticate:', typeof authenticate); // Remove this line
 
 const app = express();
 const PORT = process.env.PORT || 5000;

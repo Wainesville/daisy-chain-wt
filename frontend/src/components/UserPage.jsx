@@ -26,8 +26,8 @@ const UserPage = () => {
   const defaultProfilePicture = 'https://cdn.pixabay.com/photo/2019/08/11/18/59/icon-4399701_1280.png'; // Default image URL
 
   useEffect(() => {
-    console.log('UserPage received username:', username);
-
+    // console.log('UserPage received username:', username); // Remove this line
+  
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -41,16 +41,16 @@ const UserPage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log('Fetched user data:', userResponse.data);
+        // console.log('Fetched user data:', userResponse.data); // Remove this line
         setUser(userResponse.data);
-
+  
         const watchlistResponse = await axios.get(`${API_URL}/watchlist/${userResponse.data.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         setWatchlist(watchlistResponse.data);
-
+  
         // Fetch recommendations details
         if (userResponse.data.recommendations && userResponse.data.recommendations.length > 0) {
           const recommendationsDetails = await Promise.all(
@@ -62,7 +62,7 @@ const UserPage = () => {
                     api_key: API_KEY,
                   },
                 });
-                console.log('Fetched movie data:', movieResponse.data);
+                // console.log('Fetched movie data:', movieResponse.data); // Remove this line
                 return {
                   ...movieResponse.data,
                   thumbnail: `https://image.tmdb.org/t/p/w500/${movieResponse.data.poster_path}`,
@@ -75,13 +75,13 @@ const UserPage = () => {
           );
           setRecommendations(recommendationsDetails.filter(movie => movie !== null));
         }
-
+  
         // Set currently watching and up next
         if (watchlistResponse.data.length > 0) {
           setCurrentlyWatching(watchlistResponse.data[0]);
           setUpNext(watchlistResponse.data[1] || null);
         }
-
+  
         // Fetch top 5 movies details
         if (userResponse.data.top_movies && userResponse.data.top_movies.length > 0) {
           const topMoviesDetails = await Promise.all(
@@ -93,7 +93,7 @@ const UserPage = () => {
                     api_key: API_KEY,
                   },
                 });
-                console.log('Fetched movie data:', movieResponse.data);
+                // console.log('Fetched movie data:', movieResponse.data); // Remove this line
                 return {
                   ...movieResponse.data,
                   thumbnail: `https://image.tmdb.org/t/p/w500/${movieResponse.data.poster_path}`,
@@ -111,7 +111,7 @@ const UserPage = () => {
         setError('User not found');
       }
     };
-
+  
     fetchUserData();
   }, [username]);
 
